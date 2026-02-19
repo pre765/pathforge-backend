@@ -17,9 +17,11 @@ mongoose.connect(process.env.MONGO_URI)
 // Routes
 const authRoutes = require("./routes/authRoutes");
 const guiderRoutes = require("./routes/guiderRoutes");
+const studentRoutes = require("./routes/studentRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/guider", guiderRoutes);
+app.use("/api/student", studentRoutes);
 
 const PORT = process.env.PORT || 5000;
 
