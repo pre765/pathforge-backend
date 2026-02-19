@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PathForge Backend
 
-## Getting Started
+Express + MongoDB backend for PathForge.
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 18+
+- npm
+- MongoDB (local or Atlas)
+
+## Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create environment file:
+
+```bash
+cp .env.example .env
+```
+
+3. Update `.env` values:
+
+```env
+PORT=5000
+MONGO_URI=mongodb://127.0.0.1:27017/pathforge
+JWT_SECRET=replace-with-a-long-random-secret
+```
+
+If you use MongoDB Atlas, `MONGO_URI` should look like:
+
+```env
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster-url>/pathforge?retryWrites=true&w=majority
+```
+
+## Run
+
+Development:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Production:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## API Base
 
-## Learn More
+`http://localhost:5000/api`
 
-To learn more about Next.js, take a look at the following resources:
+## Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Server startup now waits for MongoDB connection.
+- If `MONGO_URI` is missing or invalid, the server exits with a clear error.
