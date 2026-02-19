@@ -1,15 +1,35 @@
-let connections = []; // temporary storage
+const Guider = require("../models/User");
 
-exports.getProfile = (req, res) => {
-  res.json({
-    message: "Guider profile working",
-    guiderId: req.user.id
-  });
+// CREATE GUIDER
+exports.createGuider = async (req, res) => {
+  try {
+    const guider = await Guider.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      data: guider
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
 };
 
-exports.viewRequests = (req, res) => {
-  const requests = connections.filter(
-    c => c.guiderId === req.user.id && c.status === "pending"
-  );
-  res.json(requests);
+// GET ALL GUIDERS
+exports.getGuiders = async (req, res) => {
+  try {
+    const guiders = await Guider.find();
+
+    res.status(200).json({
+      success: true,
+      data: guiders
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
 };

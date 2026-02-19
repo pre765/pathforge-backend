@@ -1,46 +1,46 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
-let guiders = []; // temporary storage
-
+// REGISTER
 exports.register = async (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    const user = await User.create(req.body);
 
-  const existingUser = guiders.find(g => g.email === email);
-  if (existingUser) {
-    return res.status(400).json({ message: "Guider already exists" });
+    res.status(201).json({
+      success: true,
+      data: user
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const newGuider = {
-    id: Date.now().toString(),
-    ...req.body,
-    password: hashedPassword
-  };
-
-  guiders.push(newGuider);
-
-  res.json({ message: "Guider registered successfully" });
 };
 
+// LOGIN (basic version)
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const guider = guiders.find(g => g.email === email);
-  if (!guider) {
-    return res.status(400).json({ message: "Guider not found" });
+    const user = await User.findOne({ email });
+
+    if (!user || user.password !== password) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      data: user
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
-
-  const isMatch = await bcrypt.compare(password, guider.password);
-  if (!isMatch) {
-    return res.status(400).json({ message: "Wrong password" });
-  }
-
-  const token = jwt.sign(
-    { id: guider.id },
-    "mysecretkey"
-  );
-
-  res.json({ token });
 };
