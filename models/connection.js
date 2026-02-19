@@ -1,12 +1,27 @@
 const mongoose = require("mongoose");
 
 const connectionSchema = new mongoose.Schema({
-  studentName: String,   // just basic info for now
-  studentEmail: String,
+  student: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
 
   guider: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Guider"
+    ref: "User",
+    required: true
+  },
+
+  domain: {
+    type: String,
+    enum: ["AI/ML", "Cybersecurity", "Web Development", "Data Science"],
+    required: true
+  },
+
+  message: {
+    type: String,
+    default: ""
   },
 
   status: {
